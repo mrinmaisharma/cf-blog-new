@@ -1,7 +1,24 @@
 import { PrismaClient } from "@/generated/prisma";
+import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import bcrypt from "bcryptjs";
 
-const prisma = new PrismaClient({});
+const databaseUrl = process.env.DATABASE_URL;
+
+if (!databaseUrl) {
+  throw new Error("DATABASE_URL is not set");
+}
+
+const parsedDatabaseUrl = new URL(databaseUrl);
+
+const prisma = new PrismaClient({
+  adapter: new PrismaMariaDb({
+    host: parsedDatabaseUrl.hostname,
+    port: parsedDatabaseUrl.port ? Number(parsedDatabaseUrl.port) : 3306,
+    user: decodeURIComponent(parsedDatabaseUrl.username),
+    password: decodeURIComponent(parsedDatabaseUrl.password),
+    database: parsedDatabaseUrl.pathname.replace(/^\//, "") || undefined,
+  }),
+});
 
 async function main() {
     const passwordHash = await bcrypt.hash("Abcd@123#", 10);
