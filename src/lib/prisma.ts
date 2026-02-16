@@ -24,4 +24,3 @@ export const prisma = new PrismaClient({
     timeout: 10000, // default 5000ms
   },
 });
-
