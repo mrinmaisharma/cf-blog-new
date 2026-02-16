@@ -1,6 +1,6 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
@@ -34,13 +34,29 @@ export default function LoginPage() {
       {err && <p className="text-red-600">{err}</p>}
 
       <form onSubmit={onSubmit} className="space-y-3">
-        <input className="border p-2 w-full" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input className="border p-2 w-full" placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button className="border px-4 py-2 rounded w-full" type="submit">Sign in</button>
+        <input
+          className="border p-2 w-full"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          className="border p-2 w-full"
+          placeholder="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button className="border px-4 py-2 rounded w-full" type="submit">
+          Sign in
+        </button>
       </form>
 
       <p className="text-sm">
-        No account? <a className="underline" href="/signup">Create one</a>
+        No account?{" "}
+        <a className="underline" href="/signup">
+          Create one
+        </a>
       </p>
     </main>
   );

@@ -3,22 +3,47 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
-export async function PATCH(req: Request, { params }: { params: { slug: string } }) {
+type RouteContext = {
+  params: Promise<{ slug: string }>;
+};
+
+export async function GET(_: Request, { params }: RouteContext) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const user = await prisma.user.findUnique({ where: { email: session.user.email } });
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const { slug } = await params;
+
+  const article = await prisma.article.findUnique({
+    where: { slug },
+    include: { tags: { include: { tag: true } } },
+  });
+  if (!article || article.authorId !== user.id) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  return NextResponse.json(article);
+}
+
+export async function PATCH(req: Request, { params }: RouteContext) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.email) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { slug } = await params;
   const { title, subtitle, content, excerpt, coverImage, published, tags } = await req.json();
 
-  const existing = await prisma.article.findUnique({ where: { slug: params.slug } });
+  const existing = await prisma.article.findUnique({ where: { slug } });
   if (!existing || existing.authorId !== user.id) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   // Update tags: simple replace strategy
   const tagNames: string[] = Array.isArray(tags) ? tags : [];
   const updated = await prisma.article.update({
-    where: { slug: params.slug },
+    where: { slug },
     data: {
       title: title ?? undefined,
       subtitle: subtitle ?? undefined,

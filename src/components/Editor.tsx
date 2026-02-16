@@ -5,6 +5,7 @@ import StarterKit from "@tiptap/starter-kit";
 
 export default function Editor({ value, onChange }: { value: any; onChange: (v: any) => void }) {
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [StarterKit],
     content: value,
     onUpdate({ editor }) {
