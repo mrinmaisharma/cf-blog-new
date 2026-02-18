@@ -1,3 +1,4 @@
+import ArticleCard1 from "@/components/post/ArticleCard1";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 
@@ -13,10 +14,18 @@ export default async function Home() {
   });
 
   return (
-    <main className="max-w-3xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Medium Clone</h1>
+    <main className="px-20">
+      <div className="grid grid-cols-3 gap-0 border-b border-gray-300">
+        <div className="col-span-2 pr-8 border-r border-gray-300 pb-10">
+          <ArticleCard1 article={articles[0]} />
+        </div>
+        <div className="flex flex-col justify-start pr-5 pl-8 gap-3">
+          <ArticleCard1 article={articles[1]} size="sm" />
+          <ArticleCard1 article={articles[2]} size="sm" />
+        </div>
+      </div>
 
-      <div className="space-y-6">
+      <div className="space-y-6 hidden">
         {articles.map((a) => (
           <article key={a.id} className="border-b pb-4">
             <Link
