@@ -1,7 +1,7 @@
 import "./globals.css";
 import Providers from "@/app/providers";
-import Navbar from "@/components/Navbar";
 import { DM_Sans } from "next/font/google";
+import NavbarClient from "@/components/Navbar.client";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -18,10 +18,10 @@ export default async function RootLayout({
       <body className={`${dmSans.variable}`} suppressHydrationWarning>
         <Providers>
           <header>
-            <Navbar />
+            <NavbarClient />
           </header>
           <div className="bg-[#F9F7F4]">
-            <div className="min-h-screen sm:max-w-[90vw] h-16 w-full mx-auto sm:px-0 px-4 py-10">
+            <div className="min-h-screen sm:max-w-[90vw] w-full mx-auto sm:px-0 px-4 py-10">
               {children}
             </div>
           </div>

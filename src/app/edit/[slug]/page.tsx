@@ -4,6 +4,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Editor from "@/components/Editor";
+// import { Editor } from "novel";
 
 type ArticleDTO = {
   id: string;
@@ -305,6 +306,7 @@ export default function EditPage() {
       {/* Editor */}
       <section className="space-y-2">
         <label className="text-sm font-semibold">Story</label>
+        {/* <Editor value={content} onChange={setContent} /> */}
         <Editor value={content} onChange={setContent} />
       </section>
 
